@@ -16,3 +16,5 @@ Rescue-Lsp is a drop-in replacement for some features of the lspconfig plugin. A
 Alternatively you could just install the lspconfig version that had that but you might miss out on any improvements or breaking changes.
 
 
+## Known bugs
+- [ ] The text in the floating windows doesn't fit (yet).
