@@ -87,10 +87,16 @@ function win.insert_into_buf(buf,prev_buf_id)
 
         table.insert(lines, "     cmd:               " .. table.concat(client.config.cmd or {}, " "))
         vim.api.nvim_buf_add_highlight(buf, -1, "GreyBG", #lines, 23, 23 + #client.config.cmd)
+        if client.name == "gopls" then 
+         local version_output = vim.fn.system(client.config.cmd[1] .. " version")
+        local single_version_line = version_output:gsub("\n", " ")
+        table.insert(lines, "     version:           " .. single_version_line)
+        else 
         local version_output = vim.fn.system(client.config.cmd[1] .. " --version")
         local single_version_line = version_output:gsub("\n", " ")
         table.insert(lines, "     version:           " .. single_version_line)
         vim.api.nvim_buf_add_highlight(buf, -1, "GreyBG", #lines, 24, 24 + #single_version_line)
+        end
         local executable = client.config.cmd and vim.fn.executable(client.config.cmd[1]) == 1
         table.insert(lines, "     executable:        " .. tostring(executable))
 
