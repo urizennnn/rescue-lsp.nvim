@@ -113,7 +113,7 @@ or which ever way you want to do it, the coming updates the LSP.commmands table 
 
 
 ## Todo
-- [ ] Add options to the setup function.
+- [x] Add options to the setup function.
 - [x] Add text highlighting.
 - [x] Apply proper text wrapping and text formatting to the window.
 - [ ] just have a config field that lets you set a function, which you then use to fetch the info for the LSPs that are not active.
