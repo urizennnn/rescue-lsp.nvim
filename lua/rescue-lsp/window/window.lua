@@ -1,4 +1,4 @@
-local utils = require "rescue-lsp.utility.utils"
+jlocal utils = require "rescue-lsp.utility.utils"
 local win = {}
 win.INSPECT = vim.inspect
 
@@ -108,9 +108,9 @@ function win.insert_into_buf(buf,prev_buf_id,setup)
     table.insert(lines, "LSP configs active in this session (globally):")
     local lsp_servers =nil 
     if type(setup.Lsp.find_lsp_servers) == "function" then
-        lsp_servers = setup.Lsp.find_lsp_servers()
+        lsp_servers =pcallsetup.Lsp.find_lsp_servers())
     else
-        lsp_servers = win.list_all_lsp_servers()
+        lsp_servers = pcall(win.list_all_lsp_servers())
     end
     table.insert(lines, table.concat(lsp_servers, ", "))
     vim.api.nvim_buf_set_lines(buf, 1, -1, false, lines)
