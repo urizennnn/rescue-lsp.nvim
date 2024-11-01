@@ -9,7 +9,8 @@
 
 
 ## Preview
-![Rescue-Lsp](https://github.com/urizennnnn/rescue-lsp.nvim/blob/master/media/preview.png)
+
+![Rescue-Lsp](https://raw.githubusercontent.com/urizennnn/rescue-lsp.nvim/master/media/preview.png)
 
 ## Aim
 Rescue-Lsp is a drop-in replacement for some features of the lspconfig plugin. As at the make of the readme the ```LspInfo``` command opens up a new tab and shows explicit data of ``` 
