@@ -1,4 +1,4 @@
-jlocal utils = require "rescue-lsp.utility.utils"
+local utils = require "rescue-lsp.utility.utils"
 local win = {}
 win.INSPECT = vim.inspect
 
