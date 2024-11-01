@@ -16,4 +16,20 @@ function utils.highlight_copilot_text(client_name)
         end
     end
 end
+
+
+function utils.is_lsp_deprecated(client_name)
+    local doc_files = vim.api.nvim_get_runtime_file("doc/*.txt", true)
+    for _, file in ipairs(doc_files) do
+        local lines = vim.fn.readfile(file)
+        for _, line in ipairs(lines) do
+            if line:find(client_name) and line:find("deprecated") then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+
 return utils

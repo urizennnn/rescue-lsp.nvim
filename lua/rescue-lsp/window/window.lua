@@ -47,9 +47,8 @@ function win.insert_into_buf(buf, prev_buf_id, setup)
     local width = vim.api.nvim_win_get_width(0)
 
     for _, client in ipairs(all_clients) do
-        if client.deprecated then
-            table.insert(deprecated_clients, client.name)
-        end
+        utils.is_lsp_deprecated(client.name)
+        table.insert(deprecated_clients, client.name)
     end
 
     if #deprecated_clients > 0 then
