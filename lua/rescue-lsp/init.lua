@@ -1,11 +1,13 @@
 local cmd = require "rescue-lsp.cmd.cmd"
 local highlight = require "rescue-lsp.colors.highlight"
+local config    = require "rescue-lsp.config.config"
 local init ={}
 
-highlight.setup()
-cmd.commands()
-function init.setup()
-    print("I am yet to add setup/configs")
+function init.setup(opts)
+    config.join= vim.tbl_deep_extend("force",config.defaults,opts or {})
+    highlight.setup()
+    print("This is the config\n")
+    cmd.commands(config.join)
 end
 
 return init

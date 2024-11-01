@@ -21,8 +21,6 @@ Alternatively you could just install the lspconfig version that had that but you
 
 ## Requirements
 - Neovim 0.10.2+
-- Lspconfig
-- Mason
 
 ## Installation
 <span style="font-size: 24px; font-weight: bold;">[lazy.nvim](https://github.com/folke/lazy.nvim)</span>
@@ -52,8 +50,52 @@ use {
 
 
 ## Configuration
+Rescue-Lsp comes with these as the defaults:
+```lua
+Lsp = {
+        commands ={
+            LspInfo = false,
+            LspRestart=false,
+            LspStart = false,
+            LspStop = false,
+        },
+        
+        find_lsp_servers=nil, -- This should be a custom function for those that aren't using lspconfig and mason, it must return a table
+    },
+    window ={
+        win_height = 30,
+        win_width = 170,
+        win_row = 10,
+        win_col = 35,
+        border = "rounded",
+        relative = "editor",
+    }
+}
 
-<h1 style="font-size: 36px; font-weight: bold; color: #333; text-align: center;">Coming Soon!</h1>
+```
+You can change the configuration by passing a table to the setup function. Here is an example:
+```lua
+require("rescue-lsp").setup({
+    Lsp = {
+        commands ={
+            LspInfo = true,
+            LspRestart=true,
+            LspStart = true,
+            LspStop = true,
+        },
+        find_lsp_servers=nil, -- This should be a custom function for those that aren't using lspconfig and mason, it must return a table
+    },
+    window ={
+        win_height = 30,
+        win_width = 170,
+        win_row = 10,
+        win_col = 35,
+        border = "rounded",
+        relative = "editor",
+    }
+})
+```
+or which ever way you want to do it, the coming updates the LSP.commmands table will be active
 
 ## Commands
 - **Rescue** - Opens up the floating window to show lsp info

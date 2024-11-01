@@ -1,42 +1,37 @@
 local utils = require "rescue-lsp.utility.utils"
 local win = {}
-local INSPECT = vim.inspect
+win.INSPECT = vim.inspect
 
-function win.draw_win()
+function win.draw_win(setup)
     local previous_buf_id = vim.api.nvim_get_current_buf()
     local buf = vim.api.nvim_create_buf(false, true)
+    -- local current_win_id = vim.api.nvim_get_current_win()
     local title = "LSP Client Info:"
     local centered_title = string.rep(" ", math.floor((170 - #title) / 2)) .. title
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, { centered_title })
 
-    local editor_width = vim.o.columns
-    local editor_height = vim.o.lines
-    local width = 170
-    local height = 30
-    local row = math.floor((editor_height - height) / 2)
-    local col = math.floor((editor_width - width) / 2)
-
     local opts = {
-        relative = "editor",
-        width = width,
-        height = height,
-        row = row,
-        col = col,
+        relative = setup.window.relative,
+        width = tonumber(setup.window.win_width),
+        height =tonumber(setup.window.win_height),
+        row =tonumber(setup.window.win_row),
+        col = tonumber(setup.window.win_col),
         style = "minimal",
-        border = "rounded",
+        border = setup.window.border,
     }
 
     vim.api.nvim_open_win(buf, true, opts)
     vim.api.nvim_buf_add_highlight(buf, -1, "BlueText", 0, 0, -1)
-    win.insert_into_buf(buf,previous_buf_id)
+    win.insert_into_buf(buf,previous_buf_id,setup)
     vim.bo[buf].buftype = "nofile"
     vim.bo[buf].readonly = true
     vim.bo[buf].modifiable = false
-
+    -- vim.wo[current_win_id].wrap = false
+    -- vim.wo[current_win_id].sidescrolloff = 0 
     vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>q<CR>", { noremap = true, silent = true })
 end
 
-function win.insert_into_buf(buf,prev_buf_id)
+function win.insert_into_buf(buf,prev_buf_id,setup)
     local clients = vim.lsp.get_clients({ buffer = buf })
     local all_clients = vim.lsp.get_clients()
     local lines = {}
@@ -110,8 +105,13 @@ function win.insert_into_buf(buf,prev_buf_id)
 
     table.insert(lines, string.rep("-", 100))
 
-    local lsp_servers = win.list_all_lsp_servers()
     table.insert(lines, "LSP configs active in this session (globally):")
+    local lsp_servers =nil 
+    if type(setup.Lsp.find_lsp_servers) == "function" then
+        lsp_servers = setup.Lsp.find_lsp_servers()
+    else
+        lsp_servers = win.list_all_lsp_servers()
+    end
     table.insert(lines, table.concat(lsp_servers, ", "))
     vim.api.nvim_buf_set_lines(buf, 1, -1, false, lines)
 
