@@ -17,8 +17,8 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: "README.md"
-          body_path: "README.md"
+          files: "readme.md"
+          body_path: "readme.md"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
