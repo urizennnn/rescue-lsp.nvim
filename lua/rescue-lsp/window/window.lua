@@ -7,7 +7,7 @@ function win.draw_win(setup)
     local buf = vim.api.nvim_create_buf(false, true)
     -- local current_win_id = vim.api.nvim_get_current_win()
     local title = "LSP Client Info:"
-    local centered_title = string.rep(" ", math.floor((170 - #title) / 2)) .. title
+    local centered_title = string.rep(" ", math.floor((setup.window.win_width - #title) / 2)) .. title
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, { centered_title })
 
     local opts = {
@@ -47,8 +47,10 @@ function win.insert_into_buf(buf, prev_buf_id, setup)
     local width = vim.api.nvim_win_get_width(0)
 
     for _, client in ipairs(all_clients) do
-        utils.is_lsp_deprecated(client.name)
-        table.insert(deprecated_clients, client.name)
+      local status =   utils.is_lsp_deprecated(client.name)
+        if status == "true" then
+            table.insert(deprecated_clients, client.name)
+        end
     end
 
     if #deprecated_clients > 0 then
