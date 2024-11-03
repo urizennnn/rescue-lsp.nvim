@@ -1,65 +1,104 @@
 local custom_lsp = {}
+custom_lsp.stopped_clients = {}
 
--- Start any LSP client, even if it's already running
+--- Starts a previously stopped LSP client.
+--- Prompts the user to select an LSP client to start if multiple clients are available.
+--- Displays a message if no stopped LSP clients are available.
 function custom_lsp.start_lsp()
-	local filetype = vim.bo.filetype
-	local lspconfig = require("lspconfig")
-	local configured_servers = {}
-
-	-- Get all configured LSP servers for the filetype
-	for server, config in pairs(lspconfig) do
-		print(type(config))
-		if config.filetypes then
-			if vim.tbl_contains(config.filetypes, filetype) then
-				table.insert(configured_servers, server)
-			end
-		end
-	end
-
-	if #configured_servers == 0 then
-		vim.notify("No LSP configured for this filetype.", vim.log.levels.INFO)
+	if #custom_lsp.stopped_clients == 0 then
+		vim.notify("No stopped LSP clients to start.", vim.log.levels.INFO)
 		return
 	end
 
-	vim.ui.select(configured_servers, {
+	vim.ui.select(custom_lsp.stopped_clients, {
 		prompt = "Select an LSP to start:",
+		format_item = function(item)
+			return "Start LSP: " .. item.name
+		end,
 	}, function(choice)
-		if choice then
-			lspconfig[choice].setup {} -- Start the selected LSP
-			vim.notify("Starting LSP client: " .. choice, vim.log.levels.INFO)
+		if not choice then
+			vim.notify("No LSP client selected.", vim.log.levels.WARN)
+			return
 		end
+
+		-- Start the LSP client using its original configuration
+		vim.lsp.start({
+			name = choice.name,
+			cmd = choice.config.cmd,
+			root_dir = choice.config.root_dir,
+		})
+		vim.notify("Started LSP client: " .. choice.name, vim.log.levels.INFO)
 	end)
 end
 
--- Stop all currently running LSP clients for the buffer
+--- Stops an active LSP client for the current buffer.
+--- Prompts the user to select an LSP client to stop if multiple clients are active.
+--- Displays a message if no active LSP clients are found for the buffer.
 function custom_lsp.stop_lsp()
-	local buf_id = vim.api.nvim_get_current_buf()
-	local active_clients = vim.lsp.get_clients({ bufnr = buf_id })
-
-	if #active_clients == 0 then
-		vim.notify("No active LSP clients found for this buffer.", vim.log.levels.INFO)
+	local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
+	if #clients == 0 then
+		vim.notify("No active LSP clients for this buffer.", vim.log.levels.INFO)
 		return
 	end
 
-	vim.ui.select(
-		vim.tbl_map(function(client)
-			return client.name
-		end, active_clients),
-		{
-			prompt = "Select an LSP to stop:",
-		},
-		function(choice)
-			if choice then
-				for _, client in ipairs(active_clients) do
-					if client.name == choice then
-						vim.lsp.stop_client(client.id, true)
-						vim.notify("Stopped LSP client: " .. client.name, vim.log.levels.INFO)
-						break
-					end
-				end
-			end
+	vim.ui.select(clients, {
+		prompt = "Select an LSP to stop:",
+		format_item = function(client)
+			return "Stop LSP: " .. client.name
+		end,
+	}, function(choice)
+		if not choice then
+			vim.notify("No LSP client selected.", vim.log.levels.WARN)
+			return
 		end
-	)
+
+		-- Stop the selected LSP client and add it to `stopped_clients`
+		vim.lsp.stop_client(choice.id)
+		vim.notify("Stopped LSP client: " .. choice.name, vim.log.levels.INFO)
+
+		-- Store stopped client for potential restart
+		table.insert(custom_lsp.stopped_clients, {
+			name = choice.name,
+			config = {
+				cmd = choice.config.cmd,
+				root_dir = choice.config.root_dir,
+			},
+		})
+	end)
+end
+
+--- Restarts an active LSP client for the current buffer.
+--- Prompts the user to select an LSP client to restart if multiple clients are active.
+--- Displays a message if no active LSP clients are found.
+function custom_lsp.restart_lsp()
+	local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
+	if #clients == 0 then
+		vim.notify("No active LSP clients for this buffer.", vim.log.levels.INFO)
+		return
+	end
+
+	vim.ui.select(clients, {
+		prompt = "Select an LSP to restart:",
+		format_item = function(client)
+			return "Restart LSP: " .. client.name
+		end,
+	}, function(choice)
+		if not choice then
+			vim.notify("No LSP client selected.", vim.log.levels.WARN)
+			return
+		end
+
+		-- Stop the selected LSP client
+		vim.lsp.stop_client(choice.id)
+
+		-- Restart the client with its original configuration
+		vim.lsp.start({
+			name = choice.name,
+			cmd = choice.config.cmd,
+			root_dir = choice.config.root_dir,
+		})
+		vim.notify("Restarted LSP client: " .. choice.name, vim.log.levels.INFO)
+	end)
 end
 
 return custom_lsp
