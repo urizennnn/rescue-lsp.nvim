@@ -53,13 +53,7 @@ use {
 Rescue-Lsp comes with these as the defaults:
 ```lua
 Lsp = {
-        commands ={
-            LspInfo = false,
-            LspRestart=false,
-            LspStart = false,
-            LspStop = false,
-        },
-        
+        commands_override = false, 
         find_lsp_servers=nil, -- This should be a custom function for those that aren't using lspconfig and mason, it must return a table
     },
     window ={
@@ -77,12 +71,7 @@ You can change the configuration by passing a table to the setup function. Here 
 ```lua
 require("rescue-lsp").setup({
     Lsp = {
-        commands ={
-            LspInfo = true,
-            LspRestart=true,
-            LspStart = true,
-            LspStop = true,
-        },
+        commands_override = false,
         find_lsp_servers=nil, -- This should be a custom function for those that aren't using lspconfig and mason, it must return a table
     },
     window ={
@@ -106,17 +95,25 @@ or which ever way you want to do it, the coming updates the LSP.commmands table 
     ```lua
     :RescueClose
     ```
+- **RescueStart** - This opens up a select ui for you to pick which lsp you want to start or restart.
+    ```lua
+        :RescueStart
+    ```
+- **RescueStop** - This does what ```RescueStart``` does but it stops the lsp.
+    ```lua
+    :RescueStop
+    ```
 
 ## Known bugs
 - [x] The text in the floating windows doesn't fit (yet).
-- [ ] Highlight groupd not working for custom strings
+- [ ] Highlight groups not working for custom strings
 
 
 ## Todo
 - [x] Add options to the setup function.
 - [x] Add text highlighting.
 - [x] Apply proper text wrapping and text formatting to the window.
-- [ ] just have a config field that lets you set a function, which you then use to fetch the info for the LSPs that are not active.
+- [x] just have a config field that lets you set a function, which you then use to fetch the info for the LSPs that are not active.
 And just default to something that gets it from lspconfig.
 Then people can just write their own when they use something special.
 (And disable it by setting it to false)
