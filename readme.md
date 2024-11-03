@@ -1,4 +1,3 @@
-```markdown
 <div align="center">
     <h1>Rescue-Lsp.nvim</h1>
 </div>
