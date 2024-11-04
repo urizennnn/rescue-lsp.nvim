@@ -19,7 +19,12 @@ jobs:
       - uses: kdheepak/panvimdoc@main
         with:
           vimdoc: ${{ github.event.repository.name }}
-      - uses: stefanzweifel/git-auto-commit-action@v4
+          version: "NVIM v0.10.2+"
+          toc: true 
+          dedupsubheadings: true 
+          treesitter: true 
+          docmapping: true 
+          docmappingprojectname: true 
         with:
           commit_message: "chore(build):Auto generate docs"
           branch: ${{ github.head_ref }}
