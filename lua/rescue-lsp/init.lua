@@ -26,6 +26,7 @@ function init.setup(opts)
 		vim.notify("commands_override not implemented for this verison", vim.log.levels.WARN)
 	end
 	cmd.lsp_cmd()
+	cmd.autocmd_group()
 end
 
 return init

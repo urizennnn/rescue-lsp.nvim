@@ -1,5 +1,6 @@
 local window = require "rescue-lsp.window.window"
 local lsp_plugin = require "rescue-lsp.window.lsp"
+local lsp = require "rescue-lsp.window.lsp"
 
 local M = {}
 
@@ -38,4 +39,25 @@ function M.lsp_cmd()
 	end, {})
 end
 
+function M.autocmd_group()
+	vim.api.nvim_create_augroup("StopLsp", { clear = true })
+
+	-- Stop LSP client on buffer enter
+	vim.api.nvim_create_autocmd({ "BufEnter", "LspAttach" }, {
+		group = "StopLsp",
+		pattern = "*",
+		callback = function()
+			local lsp_table = lsp.stopped_clients
+			local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
+
+			for _, client in ipairs(clients) do
+				for _, value in ipairs(lsp_table) do
+					if value.name == client.name then
+						vim.lsp.stop_client(client.id, true)
+					end
+				end
+			end
+		end,
+	})
+end
 return M
