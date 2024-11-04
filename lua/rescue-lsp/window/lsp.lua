@@ -52,18 +52,29 @@ function custom_lsp.stop_lsp()
 			return
 		end
 
-		-- Stop the selected LSP client and add it to `stopped_clients`
+		-- Stop the selected LSP client
 		vim.lsp.stop_client(choice.id)
 		vim.notify("Stopped LSP client: " .. choice.name, vim.log.levels.INFO)
 
-		-- Store stopped client for potential restart
-		table.insert(custom_lsp.stopped_clients, {
-			name = choice.name,
-			config = {
-				cmd = choice.config.cmd,
-				root_dir = choice.config.root_dir,
-			},
-		})
+		-- Check if the client is already in stopped_clients
+		local already_stopped = false
+		for _, value in ipairs(custom_lsp.stopped_clients) do
+			if value.name == choice.name then
+				already_stopped = true
+				break
+			end
+		end
+
+		-- Store stopped client for potential restart only if it is not already stopped
+		if not already_stopped then
+			table.insert(custom_lsp.stopped_clients, {
+				name = choice.name,
+				config = {
+					cmd = choice.config.cmd,
+					root_dir = choice.config.root_dir,
+				},
+			})
+		end
 	end)
 end
 
