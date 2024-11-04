@@ -2,6 +2,9 @@ local utils = require "rescue-lsp.utility.utils"
 local win = {}
 win.INSPECT = vim.inspect
 
+--- @alias setup table
+--- @param setup Config
+--- @return nil
 function win.draw_win(setup)
 	local previous_buf_id = vim.api.nvim_get_current_buf()
 	local buf = vim.api.nvim_create_buf(false, true)
@@ -31,6 +34,10 @@ function win.draw_win(setup)
 	vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>q<CR>", { noremap = true, silent = true })
 end
 
+--- @param buf number
+--- @param prev_buf_id number
+--- @param setup setup
+--- @return nil
 function win.insert_into_buf(buf, prev_buf_id, setup)
 	local clients = vim.lsp.get_clients({ buffer = buf })
 	local all_clients = vim.lsp.get_clients()
@@ -132,6 +139,7 @@ function win.insert_into_buf(buf, prev_buf_id, setup)
 	end)
 end
 
+---@return table
 function win.list_all_lsp_servers()
 	local lspconfig = require("lspconfig")
 	local mason_registry = require("mason-registry")
@@ -160,6 +168,9 @@ function win.list_all_lsp_servers()
 	return lines
 end
 
+--- @param buf number
+--- @param buf_id number
+--- @return table
 function win.lsp_info(buf, buf_id)
 	local log_path = vim.lsp.get_log_path()
 	local lines = {}

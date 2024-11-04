@@ -1,4 +1,6 @@
+--- @type table
 local custom_lsp = {}
+--- @type table<string, {name: string, config: {cmd: string, root_dir: string}}>
 custom_lsp.stopped_clients = {}
 
 --- Starts a previously stopped LSP client.
