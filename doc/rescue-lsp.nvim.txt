@@ -1,4 +1,4 @@
-*rescue-lsp.nvim.txt*       For NVIM v0.8.0      Last change: 2024 November 04
+*rescue-lsp.nvim.txt*      For NVIM v0.10.2+     Last change: 2024 November 04
 
 ==============================================================================
 Table of Contents                          *rescue-lsp.nvim-table-of-contents*
