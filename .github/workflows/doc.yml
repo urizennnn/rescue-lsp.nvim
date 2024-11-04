@@ -25,6 +25,7 @@ jobs:
           treesitter: true 
           docmapping: true 
           docmappingprojectname: true 
+      - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "chore(build):Auto generate docs"
           branch: ${{ github.head_ref }}
