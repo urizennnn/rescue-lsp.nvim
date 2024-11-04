@@ -23,12 +23,23 @@ function custom_lsp.start_lsp()
 			return
 		end
 
-		-- Start the LSP client using its original configuration
+		-- Start the LSP client with `on_init` callback for buffer-specific setups
 		vim.lsp.start({
 			name = choice.name,
 			cmd = choice.config.cmd,
 			root_dir = choice.config.root_dir,
+			auto_start = choice.config.autostart or false,
+			on_init = function(client)
+				vim.notify("LSP client initialized: " .. client.name, vim.log.levels.INFO)
+
+				-- Example of buffer-specific settings
+				local bufnr = vim.api.nvim_get_current_buf()
+
+				-- Enable completion triggered by <C-x><C-o>
+				vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
+			end,
 		})
+
 		vim.notify("Started LSP client: " .. choice.name, vim.log.levels.INFO)
 	end)
 end
@@ -55,7 +66,7 @@ function custom_lsp.stop_lsp()
 		end
 
 		-- Stop the selected LSP client
-		vim.lsp.stop_client(choice.id)
+		vim.lsp.stop_client(choice.id, true)
 		vim.notify("Stopped LSP client: " .. choice.name, vim.log.levels.INFO)
 
 		-- Check if the client is already in stopped_clients
