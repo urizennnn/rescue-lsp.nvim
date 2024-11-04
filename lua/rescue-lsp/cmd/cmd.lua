@@ -4,6 +4,8 @@ local lsp_plugin = require "rescue-lsp.window.lsp"
 local M = {}
 
 --- Creates user commands for opening and closing the Rescue window.
+--- @alias opts table
+--- @type opts function|opts
 --- @param opts table: Options for drawing the window.
 function M.commands(opts)
 	-- Define the "Rescue" command to open the Rescue window.
