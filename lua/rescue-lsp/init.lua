@@ -22,6 +22,9 @@ function init.setup(opts)
 
 	-- Set up commands and LSP configuration with the finalized settings
 	cmd.commands(setup)
+	if setup.Lsp.commands_override then
+		vim.notify("commands_override not implemented for this verison", vim.log.levels.WARN)
+	end
 	cmd.lsp_cmd()
 end
 
