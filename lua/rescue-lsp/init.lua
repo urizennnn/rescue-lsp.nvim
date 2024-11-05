@@ -1,6 +1,7 @@
 local cmd = require "rescue-lsp.cmd.cmd"
 local highlight = require "rescue-lsp.colors.highlight"
 local config = require "rescue-lsp.config.config"
+local help = require "rescue-lsp.cmd.help"
 local init = {}
 
 --- Initialize the rescue-lsp plugin with user-provided options.
@@ -27,6 +28,7 @@ function init.setup(opts)
 	end
 	cmd.lsp_cmd()
 	cmd.autocmd_group()
+	help.generate_help()
 end
 
 return init
